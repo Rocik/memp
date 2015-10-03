@@ -173,7 +173,7 @@ int main (int argc, char **argv)
 		
 		FILE *file = fopen(configFilePath, "w");
 		if (file == NULL)
-			g_warning("Couldn't open configuration file (%s). Probably no sufficient permissions.", configFilePath);
+			g_warning("Couldn't open configuration file (%s). This user might have insufficient permissions.", configFilePath);
 		else {
 			fprintf(file, "maxMemAllowed=%i\n", mem.maxAllowed);
 			fclose(file);
