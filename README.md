@@ -10,7 +10,7 @@ It includes a button to kill a process with the highest memory usage.
 
 # Configuration
 
-> $USER/.config/memp/memp.conf
+$USER/.config/memp/memp.conf
 
 ```sh
 maxMemAllowed=80 # minimum memory usage in percents to trigger the notification
@@ -18,7 +18,7 @@ maxMemAllowed=80 # minimum memory usage in percents to trigger the notification
 
 # Dependencies
 
-libnotify
+  - libnotify
 
 Ubuntu: 
 ```
