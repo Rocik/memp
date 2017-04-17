@@ -195,8 +195,7 @@ int main(int argc, char **argv)
 		}
 	}
 	
-	//mem.maxAllowedCritical = (mem.maxAllowed + 10) > 98 ? 98 : (mem.maxAllowed + 10);
-	mem.maxAllowedCritical = 90;
+	mem.maxAllowedCritical = (mem.maxAllowed + 10) > 98 ? 98 : (mem.maxAllowed + 10);
 			
 	mem.total = readFromFile("/proc/meminfo", "MemTotal: %d kB");
 	if (mem.total == -1) {
