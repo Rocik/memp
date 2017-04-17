@@ -1,4 +1,4 @@
-/* Copyright 2015 Rocik
+/* Copyright 2015~2017 Rocik
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ GError *error = NULL;
 const char *iconType;
 int isNotifyActive = 0;
 
+
 void killApp(NotifyNotification *notification, const char *action, gpointer user_data)
 {
 	int PID = *(pid_t*)user_data;
@@ -33,11 +34,13 @@ void killApp(NotifyNotification *notification, const char *action, gpointer user
 		kill(PID, SIGKILL);
 }
 
+
 void notifyClosed(NotifyNotification *notification, gpointer user_data)
 {
 	isNotifyActive = 0;
 	g_object_unref(notification);
 }
+
 
 NotifyNotification *sendNotify(char *title, char *message, pid_t *p_PID)
 {
@@ -63,6 +66,7 @@ NotifyNotification *sendNotify(char *title, char *message, pid_t *p_PID)
 	return notification;
 }
 
+
 void updateNotify(NotifyNotification *notification, char *title, char *message)
 {
 	if (notify_notification_update(notification, title, message, iconType) == FALSE) {
@@ -76,6 +80,7 @@ void updateNotify(NotifyNotification *notification, char *title, char *message)
     }
 }
 
+
 void closeNotify(NotifyNotification *notification)
 {
 	if (!notify_notification_close(notification, &error)) {
@@ -87,7 +92,8 @@ void closeNotify(NotifyNotification *notification)
 	g_object_unref(notification);
 }
 
-void setImportanceNotify(int v)
+
+void setNotifyImportance(int v)
 {
 	static const char ICON_CRITICAL[16] = "dialog-error";
 	static const char ICON_WARNING[16] = "dialog-warning";
@@ -97,6 +103,7 @@ void setImportanceNotify(int v)
 	else
 		iconType = ICON_WARNING;
 }
+
 
 int isActiveNotify()
 {

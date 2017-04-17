@@ -1,4 +1,4 @@
-/* Copyright 2015 Rocik
+/* Copyright 2015~2017 Rocik
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,13 @@
  * Created on September 15, 2015, 3:37 PM
  */
 #include <stdlib.h>
-#include <dirent.h> // To check if directories exists
+#include <dirent.h>   // To check if directories exists
 #include <sys/stat.h> // To create directory
 
 // To read home folder
 #include <unistd.h>
 #include <sys/types.h>
 #include <pwd.h>
-// ~
 
 #include <gtk/gtk.h>
 
@@ -37,6 +36,7 @@ struct Memory {
 	unsigned int free;
 	float percent;
 };
+
 
 int readFromFile(char *filename, char *_sscanf)
 {
@@ -57,6 +57,7 @@ int readFromFile(char *filename, char *_sscanf)
 	
 	return var;
 }
+
 
 pid_t createMessage(char *t, char *m, struct Memory mem)
 {
@@ -109,48 +110,62 @@ pid_t createMessage(char *t, char *m, struct Memory mem)
 	return PID;
 }
 
+
 gboolean eachSecond(void *data)
 {
-	static int notifyLvl = 0;
+	static gboolean isNotifyActive = FALSE;
+	// Once it get critical it will stay as long as notify is active
+	static gboolean isNotifyCritical = FALSE;
+	static int sleepCount = 0;
 	static NotifyNotification *notif = NULL;
-	static pid_t PID = 0;
 	
 	struct Memory mem = *(struct Memory*)data;
 	
 	mem.free = readFromFile("/proc/meminfo", "MemAvailable: %d kB");
-	mem.percent = 100 - mem.free*100.0/mem.total;
+	mem.percent = 100 - (float)mem.free / (float)mem.total * 100.0;
 	
 	char title[32], message[128];
 	if (mem.percent > mem.maxAllowed) {
 		if (mem.percent > mem.maxAllowedCritical) {
-			if ( notifyLvl < 3 && !isActiveNotify() )
-				notifyLvl = 2;
+			if (isNotifyCritical != TRUE) {
+				sleepCount = 0;
+				isNotifyCritical = TRUE;
+				if (!isActiveNotify())
+					isNotifyActive = FALSE;
+			}
 			
-			setImportanceNotify(1);
-		} else {
-			setImportanceNotify(0);
-		}
+			setNotifyImportance(1);
+		} else
+			setNotifyImportance(0);
 
-		if (notifyLvl == 0 || notifyLvl == 2) {
-			notifyLvl += 1;
-			PID = createMessage(title, message, mem);
+		if (isNotifyActive == FALSE) {
+			isNotifyActive = TRUE;
+			pid_t PID = createMessage(title, message, mem);
 			notif = sendNotify(title, message, &PID);
 		} else if (isActiveNotify()) {
-			PID = createMessage(title, message, mem);
+			pid_t PID = createMessage(title, message, mem);
 			updateNotify(notif, title, message);
-		}
+		} else
+			sleepCount = 60;
 	} else {
-		if (isActiveNotify())
-			closeNotify(notif);
-		
-		if (mem.percent > mem.maxAllowed*0.9)
-			notifyLvl = 0;
+		if (sleepCount > 0) 
+			sleepCount--;
+		else {
+			if (isActiveNotify())
+				closeNotify(notif);
+
+			if (mem.percent > mem.maxAllowed*0.9) {
+				isNotifyActive = FALSE;
+				isNotifyCritical = FALSE;
+			}
+		}
 	}
 	
     return TRUE;
 }
 
-int main (int argc, char **argv)
+
+int main(int argc, char **argv)
 {
 	gtk_init(&argc, &argv);
 	
@@ -180,8 +195,9 @@ int main (int argc, char **argv)
 		}
 	}
 	
-	mem.maxAllowedCritical = (mem.maxAllowed + 10) > 98 ? 98 : (mem.maxAllowed + 10);
-	
+	//mem.maxAllowedCritical = (mem.maxAllowed + 10) > 98 ? 98 : (mem.maxAllowed + 10);
+	mem.maxAllowedCritical = 90;
+			
 	mem.total = readFromFile("/proc/meminfo", "MemTotal: %d kB");
 	if (mem.total == -1) {
 		g_error("Failed to load total memory.");

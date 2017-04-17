@@ -21,7 +21,7 @@ FC=gfortran
 AS=as
 
 # Macros
-CND_PLATFORM=GNU-Linux-x86
+CND_PLATFORM=GNU-Linux
 CND_DLIB_EXT=so
 CND_CONF=Release
 CND_DISTDIR=dist
@@ -35,7 +35,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/_ext/193114952/notification.o \
+	${OBJECTDIR}/_ext/b82b348/notification.o \
 	${OBJECTDIR}/main.o
 
 
@@ -63,12 +63,12 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/memp: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/memp ${OBJECTFILES} ${LDLIBSOPTIONS}
 
-${OBJECTDIR}/_ext/193114952/notification.o: /home/rocik/projects/memp/notification.c 
-	${MKDIR} -p ${OBJECTDIR}/_ext/193114952
+${OBJECTDIR}/_ext/b82b348/notification.o: /home/rocik/projects/memp/notification.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/b82b348
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 `pkg-config --cflags libnotify` `pkg-config --cflags gtk+-3.0` -std=c11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/193114952/notification.o /home/rocik/projects/memp/notification.c
+	$(COMPILE.c) -O2 `pkg-config --cflags libnotify` `pkg-config --cflags gtk+-3.0` -std=c11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/b82b348/notification.o /home/rocik/projects/memp/notification.c
 
-${OBJECTDIR}/main.o: main.c 
+${OBJECTDIR}/main.o: main.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 `pkg-config --cflags libnotify` `pkg-config --cflags gtk+-3.0` -std=c11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.c
@@ -79,7 +79,6 @@ ${OBJECTDIR}/main.o: main.c
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
-	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/memp
 
 # Subprojects
 .clean-subprojects:

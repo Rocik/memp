@@ -1,4 +1,4 @@
-/* Copyright 2015 Rocik
+/* Copyright 2015~2017 Rocik
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ extern "C" {
 NotifyNotification *sendNotify(char *title, char *message, pid_t *p_PID);
 void updateNotify(NotifyNotification *notification, char *title, char *message);
 void closeNotify(NotifyNotification *notification);
-void setImportanceNotify(int v);
+void setNotifyImportance(int v);
 int isActiveNotify();
 
 #ifdef	__cplusplus
