@@ -1,4 +1,4 @@
-# Memory Protecion
+# Memory Protection
 
 It is in fact system protection from memory overflow.
 If you are this type of person who doesn't want swap, consider using this application.
